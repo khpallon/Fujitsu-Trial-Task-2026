@@ -3,7 +3,9 @@ package com.khpallon.fujitsu.controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.khpallon.fujitsu.model.WeatherEntity;
-import com.khpallon.fujitsu.service.ApiService;
+import com.khpallon.fujitsu.service.WeatherService;
+
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -16,16 +18,10 @@ import java.util.List;
 @RequestMapping("/api")
 public class ApiController {
 
-    private final ApiService apiService;
+    private final WeatherService apiService;
 
-    public ApiController(ApiService apiService) {
+    public ApiController(WeatherService apiService) {
         this.apiService = apiService;
-    }
-
-    // Endpoint to fetch data from the API and store it in the database
-    @GetMapping("/fetch")
-    public WeatherEntity fetchData() {
-        return apiService.fetchData();
     }
 
     // Endpoint to retrieve all stored weather data from the database
