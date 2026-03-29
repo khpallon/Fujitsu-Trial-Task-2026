@@ -1,6 +1,6 @@
 CREATE TABLE weatherdata (
     id IDENTITY PRIMARY KEY,
-    name VARCHAR(255),
+    stationName VARCHAR(255),
     wmocode VARCHAR(255),
     airtemperature DOUBLE,
     windspeed DOUBLE,

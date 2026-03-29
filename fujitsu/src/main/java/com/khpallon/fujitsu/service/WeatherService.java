@@ -11,6 +11,7 @@ import com.khpallon.fujitsu.dto.StationDTO;
 import com.khpallon.fujitsu.model.WeatherEntity;
 import com.khpallon.fujitsu.repository.WeatherDataRepository;
 
+import jakarta.annotation.PostConstruct;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
@@ -39,9 +40,9 @@ public class WeatherService {
         this.repository = repository;
     }
 
-    // Scheduled method to fetch data every 15 seconds and store it in the database.
-
-    @Scheduled(cron = "*/15 * * * * *")
+    
+    @Scheduled(cron = "15 * * * * *")
+    @PostConstruct
     public void init() {
         fetchData().subscribe();
     }
@@ -74,7 +75,7 @@ public class WeatherService {
 
     public WeatherEntity toEntity(StationDTO dto, ObservationsDTO obs) {
         WeatherEntity entity = new WeatherEntity();
-        entity.setName(dto.getName());
+        entity.setStationName(dto.getName());
         entity.setWmocode(dto.getWmocode());
         entity.setAirtemperature(dto.getAirtemperature());
         entity.setWindspeed(dto.getWindspeed());

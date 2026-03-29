@@ -14,7 +14,7 @@ public class WeatherEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String stationName;
     private String wmocode;
     private Double airtemperature;
     private Double windspeed;
@@ -23,8 +23,8 @@ public class WeatherEntity {
     
     public WeatherEntity() {}
 
-    public WeatherEntity(String name, String wmocode, Double airtemperature, Double windspeed, String phenomenon, String timestamp) {
-        this.name = name;
+    public WeatherEntity(String stationName, String wmocode, Double airtemperature, Double windspeed, String phenomenon, String timestamp) {
+        this.stationName = stationName;
         this.wmocode = wmocode;
         this.airtemperature = airtemperature;
         this.windspeed = windspeed;
@@ -34,8 +34,8 @@ public class WeatherEntity {
 
     // Setters
 
-    public void setName(String name) {
-        this.name = name;
+    public void setStationName(String stationName) {
+        this.stationName = stationName;
     }
     public void setWmocode(String wmocode) {
         this.wmocode = wmocode;
@@ -58,8 +58,8 @@ public class WeatherEntity {
     public Double getAirtemperature() {
         return airtemperature;
     }
-    public String getName() {
-        return name;
+    public String getStationName() {
+        return stationName;
     }
     public String getPhenomenon() {
         return phenomenon;
