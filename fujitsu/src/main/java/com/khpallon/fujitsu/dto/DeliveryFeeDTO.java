@@ -1,21 +1,23 @@
 package com.khpallon.fujitsu.dto;
 
+import com.khpallon.fujitsu.enums.*;
+
 public class DeliveryFeeDTO {
-    private String city;
-    private String vehicle;
+    private City city;
+    private Vehicle vehicle;
     private double fee;
 
-    public DeliveryFeeDTO(String city, String vehicle, double fee) {
+    public DeliveryFeeDTO(City city, Vehicle vehicle, double fee) {
         this.city = city;
         this.vehicle = vehicle;
         this.fee = fee;
     }
 
-    public String getCity() {
+    public City getCity() {
         return city;
     }
 
-    public String getVehicle() {
+    public Vehicle getVehicle() {
         return vehicle;
     }
 
@@ -23,7 +25,7 @@ public class DeliveryFeeDTO {
         return fee;
     }
     
-    public void setCity(String city) {
+    public void setCity(City city) {
         this.city = city;
     }
 
@@ -31,7 +33,7 @@ public class DeliveryFeeDTO {
         this.fee = fee;
     }
 
-    public void setVehicle(String vehicle) {
+    public void setVehicle(Vehicle vehicle) {
         this.vehicle = vehicle;
     }
 }

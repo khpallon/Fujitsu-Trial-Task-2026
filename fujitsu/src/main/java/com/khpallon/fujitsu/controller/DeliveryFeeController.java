@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.khpallon.fujitsu.dto.DeliveryFeeDTO;
+import com.khpallon.fujitsu.enums.*;
 import com.khpallon.fujitsu.service.DeliveryFeeService;
 
 /**
@@ -23,7 +24,9 @@ public class DeliveryFeeController {
 
     @GetMapping
     public DeliveryFeeDTO getFee(@RequestParam String city, @RequestParam String vehicle) {
-        return deliveryFeeService.calculateFee(city, vehicle);
+        City cityEnum = City.from(city);
+        Vehicle vehicleEnum = Vehicle.from(vehicle);
+        return deliveryFeeService.calculateFee(cityEnum, vehicleEnum);
     }
 
 
