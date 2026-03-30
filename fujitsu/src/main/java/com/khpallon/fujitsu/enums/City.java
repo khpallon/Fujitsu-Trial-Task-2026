@@ -1,5 +1,7 @@
 package com.khpallon.fujitsu.enums;
 
+import com.khpallon.fujitsu.exception.UnknownCityException;
+
 /**
  * Enum representing supported cities for fee calculation.
  */
@@ -9,13 +11,13 @@ public enum City {
 
     public static City from(String value) {
         if (value == null) {
-            throw new IllegalArgumentException("City cannot be null");
+            throw new UnknownCityException(value);
         }
 
         try {
             return City.valueOf(value.trim().toUpperCase());
         } catch (IllegalArgumentException ex) {
-            throw new IllegalArgumentException("Unknown city: " + value);
+            throw new UnknownCityException(value);
         }
     }
 }

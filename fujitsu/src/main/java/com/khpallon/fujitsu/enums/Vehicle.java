@@ -1,5 +1,7 @@
 package com.khpallon.fujitsu.enums;
 
+import com.khpallon.fujitsu.exception.UnknownVehicleException;
+
 /**
  * Enum representing supported vehicle types for fee calculation.
  */
@@ -9,13 +11,13 @@ public enum Vehicle {
 
     public static Vehicle from(String value) {
         if (value == null) {
-            throw new IllegalArgumentException("Vehicle cannot be null");
+            throw new UnknownVehicleException(value);
         }
 
         try {
             return Vehicle.valueOf(value.trim().toUpperCase());
         } catch (IllegalArgumentException ex) {
-            throw new IllegalArgumentException("Unknown vehicle: " + value);
+            throw new UnknownVehicleException(value);
         }
     }
 }

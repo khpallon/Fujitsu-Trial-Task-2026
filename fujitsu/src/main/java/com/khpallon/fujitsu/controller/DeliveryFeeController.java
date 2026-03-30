@@ -23,7 +23,12 @@ public class DeliveryFeeController {
         this.deliveryFeeService = deliveryFeeService;
     }
 
-    // Endpoint to calculate the delivery fee based on city and vehicle type provided as query parameters
+    /**
+     * Endpoint to calculate the delivery fee based on city and vehicle type provided as query parameters.
+     * @param city - the city for which to calculate the fee (e.g., "Tallinn", "Tartu", "Parnu")
+     * @param vehicle - the type of vehicle used for delivery (e.g., "Car", "Scooter", "Bike")
+     * @return a DeliveryFeeDTO containing the calculated fee and related information
+     */
 
     @GetMapping
     public DeliveryFeeDTO getFee(@RequestParam String city, @RequestParam String vehicle) {
