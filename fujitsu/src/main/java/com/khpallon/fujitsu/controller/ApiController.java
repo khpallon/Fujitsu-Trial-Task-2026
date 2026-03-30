@@ -5,8 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import com.khpallon.fujitsu.model.WeatherEntity;
 import com.khpallon.fujitsu.service.WeatherService;
 
-import jakarta.annotation.PostConstruct;
-
 import java.util.List;
 
 

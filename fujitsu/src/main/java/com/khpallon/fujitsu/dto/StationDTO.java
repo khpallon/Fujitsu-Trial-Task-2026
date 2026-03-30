@@ -24,10 +24,16 @@ public class StationDTO {
     @XmlElement(name = "phenomenon")
     private String phenomenon;
 
+    private String timestamp; // added to hold the timestamp from ObservationsDTO
+
     public StationDTO() {}
 
 
     // Getters
+
+    public String getTimestamp() {
+        return timestamp;
+    }
 
     public String getName() {
         return name;
@@ -47,6 +53,10 @@ public class StationDTO {
 
     public String getPhenomenon() {
         return phenomenon;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 
 }

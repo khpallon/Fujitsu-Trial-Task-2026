@@ -10,8 +10,9 @@ import com.khpallon.fujitsu.enums.*;
 import com.khpallon.fujitsu.service.DeliveryFeeService;
 
 /**
- * Controller for handling API requests related to delivery fee calculations.
+ * Controller for handling API requests related to delivery fee calculations based on city and vehicle type.
  */
+
 @RestController
 @RequestMapping("/fee")
 public class DeliveryFeeController {
@@ -21,6 +22,8 @@ public class DeliveryFeeController {
     public DeliveryFeeController(DeliveryFeeService deliveryFeeService) {
         this.deliveryFeeService = deliveryFeeService;
     }
+
+    // Endpoint to calculate the delivery fee based on city and vehicle type provided as query parameters
 
     @GetMapping
     public DeliveryFeeDTO getFee(@RequestParam String city, @RequestParam String vehicle) {

@@ -4,16 +4,22 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+import com.khpallon.fujitsu.enums.City;
+
+/**
+ * Component responsible for mapping cities to their corresponding weather station names.
+ */
+
 @Component
 public class StationMapping {
 
-    private final Map<String, String> cityToStation = Map.of(
-        "tartu", "Tartu-Tõravere",
-        "tallinn", "Tallinn-Harku",
-        "pärnu", "Pärnu"
+    private final Map<City, String> cityToStation = Map.of(
+        City.TARTU, "Tartu-Tõravere",
+        City.TALLINN, "Tallinn-Harku",
+        City.PARNU, "Pärnu"
     );
 
-    public String getStationForCity(String city) {
-        return cityToStation.get(city.toLowerCase());
+    public String getStationForCity(City city) {
+        return cityToStation.get(city);
     }
 }

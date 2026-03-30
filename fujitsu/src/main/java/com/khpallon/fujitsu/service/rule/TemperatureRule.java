@@ -5,6 +5,10 @@ import org.springframework.stereotype.Component;
 import com.khpallon.fujitsu.enums.Vehicle;
 import com.khpallon.fujitsu.model.WeatherEntity;
 
+/**
+ * Rule for calculating extra fees based on temperature conditions.
+ */
+
 @Component
 public class TemperatureRule implements FeeRule {
 

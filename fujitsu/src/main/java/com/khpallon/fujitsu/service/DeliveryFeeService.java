@@ -5,41 +5,45 @@ import org.springframework.stereotype.Service;
 import com.khpallon.fujitsu.config.StationMapping;
 import com.khpallon.fujitsu.dto.DeliveryFeeDTO;
 import com.khpallon.fujitsu.enums.*;
+import com.khpallon.fujitsu.exception.WeatherDataNotFoundException;
 import com.khpallon.fujitsu.model.WeatherEntity;
 import com.khpallon.fujitsu.repository.WeatherDataRepository;
 
+/**
+ * Service for calculating the total delivery fee based on city, vehicle, and weather conditions.
+ */
 
 @Service
 public class DeliveryFeeService {
 
     private final BaseFeeService baseFeeService;
     private final ExtraFeeService extraFeeService;
-    private final WeatherDataRepository repo;
+    private final WeatherDataRepository weatherRepository;
     private final StationMapping stationMapping;
 
-    public DeliveryFeeService(BaseFeeService baseFeeService, ExtraFeeService extraFeeService, WeatherDataRepository repo, StationMapping stationMapping) {
+    public DeliveryFeeService(BaseFeeService baseFeeService, ExtraFeeService extraFeeService, WeatherDataRepository weatherRepository, StationMapping stationMapping) {
         this.baseFeeService = baseFeeService;
         this.extraFeeService = extraFeeService;
-        this.repo = repo;
+        this.weatherRepository = weatherRepository;
         this.stationMapping = stationMapping;
     }
 
-    // Main method to calculate the delivery fee based on the city and vehicle type
-
     public DeliveryFeeDTO calculateFee(City city, Vehicle vehicle) {
 
-        String station = stationMapping.getStationForCity(city.name().toLowerCase());
+        // 1. Resolve the weather station for the city
+        String stationName = stationMapping.getStationForCity(city);
 
-        WeatherEntity weather = repo.findTopByStationNameOrderByTimestampDesc(station)
-        .orElseThrow(
-            () -> new IllegalStateException("No weather data available for station: " + station)
-        );
+        // 2. Fetch the latest weather data for that station
+        WeatherEntity latestWeather = weatherRepository
+                .findTopByStationNameOrderByTimestampDesc(stationName)
+                .orElseThrow(() -> new WeatherDataNotFoundException(stationName));
 
+        // 3. Calculate base and extra fees
+        double baseFee = baseFeeService.calculate(city, vehicle);
+        double extraFee = extraFeeService.calculate(vehicle, latestWeather);
 
-        double base = baseFeeService.calculate(city, vehicle);
-        double extra = extraFeeService.calculate(vehicle, weather);
-
-        return new DeliveryFeeDTO(city, vehicle, base + extra);
+        // 4. Return the total fee
+        return new DeliveryFeeDTO(city, vehicle, baseFee + extraFee);
     }
 
 

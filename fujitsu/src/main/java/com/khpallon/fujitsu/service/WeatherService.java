@@ -14,11 +14,11 @@ import com.khpallon.fujitsu.repository.WeatherDataRepository;
 import jakarta.annotation.PostConstruct;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
-import reactor.util.function.Tuples;
+import reactor.core.scheduler.Schedulers;
 
 /**
- * Service class for fetching weather data from the API and storing it in the database.
+ * Service responsible for fetching weather data from an external API, storing it in the database, and providing access to the stored data.
+ * It uses WebClient for non-blocking API calls and is scheduled to run at application startup and at regular intervals defined by a cron expression.
  */
 
 @Service
@@ -29,7 +29,7 @@ public class WeatherService {
 
     // List of required station names to filter the API data.
 
-    private static final List<String> REQUIRED = List.of(
+    private static final List<String> REQUIRED_STATIONS = List.of(
         "Tallinn-Harku",
         "Tartu-Tõravere",
         "Pärnu"
@@ -40,47 +40,52 @@ public class WeatherService {
         this.repository = repository;
     }
 
-    
-    @Scheduled(cron = "15 * * * * *")
     @PostConstruct
-    public void init() {
-        fetchData().subscribe();
+    public void onStartup() {
+        fetchAndStoreWeatherData().subscribe();
     }
 
-    // Fetch weather data from the API, filter for required stations, convert to entities, and save to the database.
-
-    public Mono<Void> fetchData() {
-    return fetchRequiredStations()
-        .flatMapMany(Flux::fromIterable)
-        .map(tuple -> toEntity(tuple.getT1(), tuple.getT2()))
-        .flatMap(entity -> Mono.fromCallable(() -> repository.save(entity)))
-        .then();
+    
+    @Scheduled(cron = "${weather.import.cron}")
+    public void scheduledImport() {
+        fetchAndStoreWeatherData().subscribe();
     }
 
-    // Fetch weather data from the API and filter for required stations.
+    // Fetch weather data from the API, filter for required stations, convert to entities, and save to the database in a non-blocking way.
 
-    public Mono<List<Tuple2<StationDTO, ObservationsDTO>>> fetchRequiredStations() {
+    public Mono<Void> fetchAndStoreWeatherData() {
+        return fetchStationsFromApi()
+            .flatMapMany(Flux::fromIterable)
+            .map(this::mapToEntity)
+            .flatMap(entity -> Mono.fromCallable(() -> repository.save(entity))
+                                   .subscribeOn(Schedulers.boundedElastic()))
+            .then();
+    }
+
+    // Fetch the latest weather data for all stations from the external API and filter for the required stations.
+
+    private Mono<List<StationDTO>> fetchStationsFromApi() {
         return webClient.get()
             .uri("https://www.ilmateenistus.ee/ilma_andmed/xml/observations.php")
             .retrieve()
             .bodyToMono(ObservationsDTO.class)
             .map(obs -> obs.getStations().stream()
-                .filter(s -> REQUIRED.contains(s.getName()))
-                .map(s -> Tuples.of(s, obs))
+                .filter(s -> REQUIRED_STATIONS.contains(s.getName()))
+                .peek(s -> s.setTimestamp(obs.getTimestamp())) // attach timestamp directly
                 .toList()
             );
     }
 
-    // Convert StationDTO and ObservationsDTO to WeatherEntity for database storage.    
+    // Convert a StationDTO to a WeatherEntity for database storage.
 
-    public WeatherEntity toEntity(StationDTO dto, ObservationsDTO obs) {
+    private WeatherEntity mapToEntity(StationDTO dto) {
         WeatherEntity entity = new WeatherEntity();
         entity.setStationName(dto.getName());
         entity.setWmocode(dto.getWmocode());
         entity.setAirtemperature(dto.getAirtemperature());
         entity.setWindspeed(dto.getWindspeed());
         entity.setPhenomenon(dto.getPhenomenon());
-        entity.setTimestamp(obs.getTimestamp());
+        entity.setTimestamp(dto.getTimestamp());
         return entity;
     }
 

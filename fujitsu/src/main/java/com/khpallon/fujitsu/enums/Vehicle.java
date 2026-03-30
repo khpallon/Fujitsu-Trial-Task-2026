@@ -1,5 +1,9 @@
 package com.khpallon.fujitsu.enums;
 
+/**
+ * Enum representing supported vehicle types for fee calculation.
+ */
+
 public enum Vehicle {
     CAR, SCOOTER, BIKE;
 

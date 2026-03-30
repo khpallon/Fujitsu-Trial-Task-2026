@@ -2,6 +2,10 @@ package com.khpallon.fujitsu.dto;
 
 import com.khpallon.fujitsu.enums.*;
 
+/**
+ * Data Transfer Object for representing delivery fee information based on city and vehicle type.
+ */
+
 public class DeliveryFeeDTO {
     private City city;
     private Vehicle vehicle;

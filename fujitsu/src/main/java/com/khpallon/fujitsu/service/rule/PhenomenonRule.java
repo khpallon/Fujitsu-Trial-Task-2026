@@ -3,7 +3,12 @@ package com.khpallon.fujitsu.service.rule;
 import org.springframework.stereotype.Component;
 
 import com.khpallon.fujitsu.enums.Vehicle;
+import com.khpallon.fujitsu.exception.VehicleForbiddenException;
 import com.khpallon.fujitsu.model.WeatherEntity;
+
+/**
+ * Rule for calculating extra fees based on weather phenomena.
+ */
 
 @Component
 public class PhenomenonRule implements FeeRule {
@@ -17,7 +22,7 @@ public class PhenomenonRule implements FeeRule {
         } else if (phenomenon.contains("rain")) {
             return 0.5;
         } else if (phenomenon.contains("glaze") || phenomenon.contains("hail") || phenomenon.contains("thunder")) {
-            throw new IllegalStateException("Usage of selected vehicle type is forbidden");
+            throw new VehicleForbiddenException();
         }
         return 0.0;
     }

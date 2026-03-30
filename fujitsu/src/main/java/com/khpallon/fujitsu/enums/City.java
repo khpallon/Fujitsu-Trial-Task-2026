@@ -1,5 +1,9 @@
 package com.khpallon.fujitsu.enums;
 
+/**
+ * Enum representing supported cities for fee calculation.
+ */
+
 public enum City {
     TALLINN, TARTU, PARNU;
 
