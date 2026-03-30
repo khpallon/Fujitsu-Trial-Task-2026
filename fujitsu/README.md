@@ -29,6 +29,11 @@ In bash:
 - cd fujitsu/
 - ./gradlew bootRun
 
+It is possible to review currently stored weather api data in
+
+- localhost:8080/api/data
+
+To do fee calculation check the REST API section
 
 ## Weather Import
 
@@ -80,7 +85,7 @@ Each rule:
 GET /fee?city=Tallinn&vehicle=Scooter
 
 ### Query Parameters
-city: Tallinn, Tartu, Parnu  
+city: Tallinn, Tartu, Pärnu  
 vehicle: Car, Scooter, Bike  
 
 ### Success Response Example
@@ -91,6 +96,7 @@ vehicle: Car, Scooter, Bike
     <vehicle>SCOOTER</vehicle>
     <fee>4.0</fee>
 </DeliveryFeeDTO>
+````
 
 ## Testing
 
